@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${note} == null ? 'New note' : 'Edit note'"></title>
+    <!-- Font Awesome -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+            rel="stylesheet"
+    />
+    <link th:href="@{/css/style.css}" rel="stylesheet">
+</head>
+<body>
+<header>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-gradient" th:classappend="${notesView == 'true'} ? table-view : list-view">
+        <!-- Container wrapper -->
+        <div class="container">
+            <!-- Navbar brand -->
+            <div class="navbar-brand me-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor"
+                     class="bi bi-journal-code" viewBox="0 0 16 16" id="IconChangeColor">
+                    <path fill-rule="evenodd"
+                          d="M8.646 5.646a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L10.293 8 8.646 6.354a.5.5 0 0 1 0-.708zm-1.292 0a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 0 .708l2 2a.5.5 0 0 0 .708-.708L5.707 8l1.647-1.646a.5.5 0 0 0 0-.708z"
+                          id="mainIconPathAttribute" fill="#ff0000"></path>
+                    <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"
+                          id="mainIconPathAttribute" fill="#ff0000"></path>
+                    <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"
+                          id="mainIconPathAttribute" fill="#ff0000"></path>
+                </svg>
+            </div>
+
+            <!-- Collapsible wrapper -->
+            <div class="collapse navbar-collapse" id="navbarButtonsExample">
+                <h1 class="navbar-brand mb-0 h1"><span>Hello,&nbsp;</span><span th:text="${username}"></span>!</h1>
+
+                <div class="d-flex align-items-center">
+                    <a href="/logout" role="button">
+                        <button type="button" id="logoutBtn" class="btn btn-outline-danger btn-rounded px-3">
+                            Logout<i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <!-- Collapsible wrapper -->
+        </div>
+        <!-- Container wrapper -->
+    </nav>
+    <!-- Navbar -->
+</header>
+    <main>
+        <section th:if="${notesView == 'false'}">
+            <div style="padding: 50px;">
+                <div class="text-danger" style="padding: 0px 0px 5px 10px;" th:if="${message}" th:text="${message}">
+                </div>
+
+                <form name="newNote" method="post" th:action="'/note/' + (${isNew} == true ? 'create' : 'edit')"
+                      style="width: 560px;  background-color: #ffb31a; padding: 20px; border-radius: 20px; margin-bottom: 10px;">
+                    <p style="font-size: 30px"><b>Note title:</b><br>
+                        <input name="title" type="text" size="40" style="width: 520px; height: 40px; font-size: 20px;" th:value="${note?.title}" />
+                    </p>
+                    <input name="noteId" type="text" th:value="${note?.noteId}" hidden/>
+                    <p style="font-size: 25px">Note content:<Br>
+                        <textarea name="content" style="width: 520px; height: 120px; font-size: 20px;" th:text="${note?.content}"></textarea></p>
+                    <p><a href="list"><input type="button" value="Cancel"
+                                             style="width: 150px; height: 50px; border-radius: 15px; font-size: 25px;  background-color: #000066; color: white;"/></a>
+
+                        <input type="submit" value="Done"
+                               style="width: 150px; height: 50px; border-radius: 15px; font-weight: 400; font-size: 25px;  background-color: #000066; color: white;"/>
+                        <span class="form-check form-check-inline">
+            <input style="margin-left: 5px;" class="form-check-input" type="radio" name="privacy" id="inlineRadio1" value="PUBLIC" th:checked="${note?.privacy?.name()} == 'PUBLIC'"/>
+            <label class="form-check-label" for="inlineRadio1">Public</label>
+            </span>
+
+                        <span class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="privacy" id="inlineRadio2" value="PRIVATE" th:checked="(${note?.privacy?.name()} == 'PRIVATE') or (${note} == null)"/>
+                <label class="form-check-label" for="inlineRadio2">Private</label>
+            </span>
+
+                    </p>
+                </form>
+            </div>
+        </section>
+
+        <section th:if="${notesView == 'true'}">
+            <div class="container-sm">
+                <div class="text-danger" style="padding: 5px 0 0;" th:if="${message}" th:text="${message}">
+                </div>
+                <h1 class="mt-2" th:text="${note} == null ? 'Create note' : 'Edit note'"></h1>
+                <form th:action="'/note/' + (${isNew} == true ? 'create' : 'edit')" method="post">
+                    <div class="row g-3 align-items-center mb-3">
+                    <div class="col-auto">
+                        <label for="noteTitle" class="col-form-label">Note title</label>
+                    </div>
+                    <div class="col-auto">
+                        <input type="text" id="noteTitle" name="title" class="form-control" th:value="${note?.title}">
+                    </div>
+                    </div>
+                    <div class="mb-3">
+<!--                        <label for="noteContent" class="form-label" hidden>Note content</label>-->
+                        <textarea class="form-control" name="content" id="noteContent" rows="20" th:text="${note?.content}"></textarea>
+                    </div>
+                    <div class="float-lg-start w-50">
+                        <div class="col-4 ">
+                            <input type="radio" name="privacy" id="inlineRadio3" value="PUBLIC" th:checked="${note?.privacy?.name()} == 'PUBLIC'">
+                            <label for="inlineRadio3">Public</label>
+                            <input type="radio" name="privacy" id="inlineRadio4" value="PRIVATE" th:checked="(${note?.privacy?.name()} == 'PRIVATE') or (${note} == null)">
+                            <label for="inlineRadio4">Private</label>
+                        </div>
+                    </div>
+                    <div class="float-lg-end">
+                        <a href="/list" type="button" class="btn btn-outline-primary btn-block mb-2">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn btn-primary mb-2">
+                            Done
+                        </button>
+                    </div>
+                    <input name="noteId" th:value="${note?.noteId}" hidden/>
+                </form>
+            </div>
+        </section>
+</main>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Note</title>
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.1.0/mdb.min.css"
+            rel="stylesheet"
+    />
+</head>
+<body style="background-color: 	#d9d9d9; padding-top: 200px;">
+<div th:if="${note}"
+    style="background-color: #ffb31a; border-radius: 20px; padding: 20px; margin: 0 auto 0; width: 700px; margin-bottom: 10px;">
+
+        <h3 th:text="${note.title}" style="word-break: break-all;"></h3>
+        <p th:text="${note.content}" style="word-break: break-all;"></p>
+        <input name="noteId" type="text" th:value="${note.noteId}" hidden/>
+        <p style="text-align: right;">
+            <span th:if="${note.privacy.name() == 'PRIVATE'}" style="margin-left:auto;">
+                                <span th:text="${note.privacy}"></span><i class="fas fa-lock" style="margin-left:10px;"></i></span>
+            <span th:if="${note.privacy.name() == 'PUBLIC'}" style="margin-left:auto;">
+                                <span th:text="${note.privacy}"></span><i class="fas fa-lock-open" style="margin-left:10px;"></i></span>
+
+        </p>
+</div>
+<div style="text-align: center;">
+    <h1 th:if="${message}" th:text="${message}"></h1>
+</div>
+</body>
+</html>
