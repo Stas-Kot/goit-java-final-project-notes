@@ -1,10 +1,10 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.0.4-SNAPSHOT'
+	id 'org.springframework.boot' version '3.0.2'
 	id 'io.spring.dependency-management' version '1.1.0'
 }
 
-group = 'com.goit.feature'
+group = 'com.goit'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '17'
 
@@ -34,6 +34,8 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+	// https://mvnrepository.com/artifact/org.commonmark/commonmark
+	implementation 'org.commonmark:commonmark:0.21.0'
 }
 
 tasks.named('test') {
