@@ -128,9 +128,7 @@ public class NoteController {
 
         try {
             Note saved = noteService.add(username, noteDto);
-            System.out.println("saved = " + saved);
         } catch (NotValidNoteTitleException ex) {
-            System.out.println("\"EST`\" = " + "EST`");
             result.addObject("message",
                     "Note title length have to be at least 5 and not more than 100 symbols!");
             return result;

@@ -23,10 +23,6 @@ public class UserService {
         passwordEncoder = new BCryptPasswordEncoder();
     }
 
-    public void printAllUsers(){
-        System.out.println("repository.findAll() = " + repository.findAll());
-    }
-
     public synchronized User save(User user) throws UserAlreadyExistException {
         if (user.getUsername() == null || !validation.isValidName(user.getUsername())) {
             throw new NotValidUserNameException("Not valid username");

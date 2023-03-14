@@ -18,13 +18,11 @@ public class NoteService {
     private final CustomUserDetailsService customUserDetailsService;
 
     public List<Note> getAllByUserId(long id) {
-        return repository.getAllNotesByUserId(id);
+        return repository.findAllByUser_Id(id);
     }
 
     public synchronized Note add(String username, NoteDto noteDto) {
-        System.out.println("\"tyt\" = " + "tyt");
         if (noteDto.getTitle() == null || !validation.isValidTitle(noteDto.getTitle())) {
-            System.out.println("\"tyto\" = " + "tyto");
             throw new NotValidNoteTitleException("Not valid note title!");
         }
         if (noteDto.getContent() == null || !validation.isValidContent(noteDto.getContent())) {
