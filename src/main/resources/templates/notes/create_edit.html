@@ -108,23 +108,23 @@
                     </div>
                     <div class="mb-3">
 <!--                        <label for="noteContent" class="form-label" hidden>Note content</label>-->
-                        <textarea class="form-control" name="content" id="noteContent" rows="20" th:text="${note?.content}"></textarea>
+                        <textarea class="form-control" name="content" id="noteContent" rows="15" th:text="${note?.content}"></textarea>
                     </div>
-                    <div class="float-lg-start w-50">
-                        <div class="col-4 ">
+                    <div class="form-footer">
+                        <div class="col-4 dib">
                             <input type="radio" name="privacy" id="inlineRadio3" value="PUBLIC" th:checked="${note?.privacy?.name()} == 'PUBLIC'">
                             <label for="inlineRadio3">Public</label>
                             <input type="radio" name="privacy" id="inlineRadio4" value="PRIVATE" th:checked="(${note?.privacy?.name()} == 'PRIVATE') or (${note} == null)">
                             <label for="inlineRadio4">Private</label>
                         </div>
-                    </div>
-                    <div class="float-lg-end">
-                        <a href="/list" type="button" class="btn btn-outline-primary btn-block mb-2">
-                            Cancel
-                        </a>
-                        <button type="submit" class="btn btn-primary mb-2">
-                            Done
-                        </button>
+                        <div class="float-lg-end">
+                            <a href="/note/list" type="button" class="btn btn-primary mb-2">
+                                Cancel
+                            </a>
+                            <button width="93" type="submit" class="btn btn-primary mb-2">
+                                Done
+                            </button>
+                        </div>
                     </div>
                     <input name="noteId" th:value="${note?.noteId}" hidden/>
                 </form>

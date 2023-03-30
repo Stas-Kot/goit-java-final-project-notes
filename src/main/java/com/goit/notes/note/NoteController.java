@@ -10,6 +10,7 @@ import com.goit.notes.user.views.EViewType;
 import com.goit.notes.user.views.ViewRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/note")
 public class NoteController {
+    private static final int MAX_NOTE_CONTENT_LENGTH_SHOWN = 25;
     private final NoteService noteService;
     private final SecurityService securityService;
     private final UserService userService;
@@ -38,12 +40,25 @@ public class NoteController {
         String username = securityService.getUsername();
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
         String notesView = userDetails.getViewType().equals("TABLE")? "true" : "false";
-        List<NoteDto> notes = noteService.getAllByUserId(userDetails.getId()).stream()
+
+        List<NoteDto> notes = userDetails.getNotes().stream()
                 .map(NoteDto::fromNote)
                 .collect(Collectors.toList());
+
+        notes.forEach(note -> {
+            String content = note.getContent();
+            if(content.length() > MAX_NOTE_CONTENT_LENGTH_SHOWN) {
+                note.setContent(content.substring(0, MAX_NOTE_CONTENT_LENGTH_SHOWN) + "...");
+            }
+        });
+
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN"));
+
         result.addObject("notesView", notesView);
         result.addObject("notes", notes);
         result.addObject("username", username);
+        result.addObject("isAdmin", isAdmin);
         return result;
     }
 
@@ -67,14 +82,22 @@ public class NoteController {
 
     @GetMapping("/edit")
     public ModelAndView edit(@RequestParam(name = "id") String id) {
-        ModelAndView result = new ModelAndView("notes/create_edit");
-        Note note = noteService.getById(id);
         String username = securityService.getUsername();
         UserDetailsImpl userDetails = userDetailsService.loadUserByUsername(username);
+        Note note = noteService.getById(id);
+
+        if(note.getUser() == null || !userDetails.getId().equals(note.getUser().getId())) {
+            ModelAndView result = new ModelAndView("notes/note");
+            result.addObject("message", "This note does not exist!:(");
+            return result;
+        }
+
+        ModelAndView result = new ModelAndView("notes/create_edit");
         String notesView = userDetails.getViewType().equals("TABLE")? "true" : "false";
         result.addObject("notesView", notesView);
         result.addObject("note", NoteDto.fromNote(note));
         result.addObject("username", username);
+
         return result;
     }
 
@@ -144,8 +167,8 @@ public class NoteController {
     @GetMapping("/share/{id}")
     public ModelAndView info(@PathVariable("id") String id) {
         ModelAndView result = new ModelAndView("notes/note");
-        Note note = noteService.getPublicNoteById(id);
-        if(note != null) {
+        Note note = noteService.getById(id);
+        if(noteService.getById(id).getPrivacy().name().equals("PUBLIC")) {
             return result.addObject("note", note);
         } else {
             return result.addObject("message", "This note does not exist!:(");

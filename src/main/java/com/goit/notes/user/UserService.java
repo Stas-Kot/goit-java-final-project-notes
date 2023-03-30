@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class UserService {
@@ -57,5 +59,16 @@ public class UserService {
         User user = repository.findByUsername(username);
         user.setViewType(EViewType.valueOf(viewType));
         repository.save(user);
+    }
+
+    public List<User> findAllUsers() {
+        System.out.println("repository.findAll() = " + repository.findAll());
+        return repository.findAll();
+    }
+
+    public void deleteById(Long id) {
+        System.out.println("findAllUsers()1 = " + findAllUsers());
+        repository.deleteById(id);
+        System.out.println("findAllUsers()2 = " + findAllUsers());
     }
 }

@@ -181,7 +181,7 @@ display: flex; justify-content: space-around; padding: 50px;
 margin-right: 15px;
 }
 .note-create{
-display: flex; flex-direction: column; font-size: 40px; text-align: center; margin: 0; padding: 20px; border-radius: 25px; width: 300px; color: white; background-color: #000066;
+display: flex; flex-direction: column; font-size: 40px; text-align: center; margin: 0; padding: 20px; border-radius: 25px; color: white; background-color: #000066;
 }
 .div-list h1{
 font-size: 50px; color: #000066; font-weight:700; margin-left: 62px;
@@ -194,4 +194,33 @@ background-color: #ffb31a; border-radius: 20px; padding: 20px; width: 700px; mar
 }
 .custom-btn{
 -webkit-appearance: none; width: 150px; height: 50px; border-radius: 15px; font-weight: 400; font-size: 25px; background-color: #000066; color: white;
+}
+.float-lg-end button{
+min-width: 93px
+}
+.form-footer{
+display: flex;
+justify-content: space-between;
+}
+.dib{
+display: inline-block;
+}
+.adminBtn:hover {
+color: #fff;
+background-color: #5c636a;
+border-color: #ff0000;
+}
+.adminBtn {
+color: #fff;
+border-color: transparent;
+}
+.btn-outline-danger:first-child:hover,
+.btn-outline-danger:hover, :not(.btn-check)+.btn-outline-danger:hover{
+border-color: #ff0000;
+}
+.navbar-expand-lg .form-check{
+margin-bottom: 0;
+}
+.navbar-expand-lg .navbar-collapse{
+justify-content: end
 }

@@ -57,20 +57,15 @@ public class NoteService {
     }
 
     public Note getById(String id) {
-        return repository.findById(id).orElseThrow(IllegalArgumentException::new);
+        return repository.findById(id).orElseGet(() -> {
+                  Note note = new Note();
+                  note.setPrivacy(ENotePrivacy.PRIVATE);
+                  return note;
+                }
+        );
     }
 
     public synchronized void deleteById(String id) {
         repository.deleteById(id);
-    }
-
-    public Note getPublicNoteById(String id) {
-        Note note = null;
-
-        if(repository.existsById(id) && getById(id).getPrivacy().name().equals("PUBLIC")) {
-            note = getById(id);
-        }
-
-        return note;
     }
 }

@@ -26,7 +26,7 @@ public class UserDetailsImpl implements UserDetails {
 
     public static UserDetailsImpl build(User user) {
         EUserRole role = user.getRole();
-        Set<GrantedAuthority> authorities = Collections.singleton(role::name);
+        Set<GrantedAuthority> authorities = Collections.singleton(() -> role.name());
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),
