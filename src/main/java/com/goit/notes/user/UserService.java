@@ -1,8 +1,7 @@
 package com.goit.notes.user;
 
-import com.goit.notes.exceptions.NotValidPasswordException;
-import com.goit.notes.exceptions.NotValidUserNameException;
-import com.goit.notes.exceptions.UserAlreadyExistException;
+import com.goit.notes.exceptions.*;
+import com.goit.notes.note.Note;
 import com.goit.notes.user.views.EViewType;
 import com.goit.notes.utils.Validation;
 import jakarta.annotation.PostConstruct;
@@ -51,7 +50,7 @@ public class UserService {
     }
 
 
-    public User findById(Long id) {
+    public User getById(Long id) {
         return repository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User with id=" + id + " not found"));
     }
 
@@ -70,5 +69,21 @@ public class UserService {
         System.out.println("findAllUsers()1 = " + findAllUsers());
         repository.deleteById(id);
         System.out.println("findAllUsers()2 = " + findAllUsers());
+    }
+
+    public synchronized void update(User user) {
+        if (user.getUsername() == null || !validation.isValidName(user.getUsername())) {
+            throw new NotValidUserNameException("Not valid username!");
+        }
+        if (isUserExists(user.getUsername())) {
+            throw new UserAlreadyExistException("There is an account with that username: "
+                    + user.getUsername());
+        }
+
+        User updatedUser = getById(user.getId());
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setRole(user.getRole());
+        System.out.println("updatedUser = " + updatedUser);
+//        repository.save(updatedNote);
     }
 }
