@@ -61,29 +61,27 @@ public class UserService {
     }
 
     public List<User> findAllUsers() {
-        System.out.println("repository.findAll() = " + repository.findAll());
         return repository.findAll();
     }
 
     public void deleteById(Long id) {
-        System.out.println("findAllUsers()1 = " + findAllUsers());
         repository.deleteById(id);
-        System.out.println("findAllUsers()2 = " + findAllUsers());
     }
 
     public synchronized void update(User user) {
-        if (user.getUsername() == null || !validation.isValidName(user.getUsername())) {
-            throw new NotValidUserNameException("Not valid username!");
-        }
-        if (isUserExists(user.getUsername())) {
-            throw new UserAlreadyExistException("There is an account with that username: "
-                    + user.getUsername());
+        User updatedUser = getById(user.getId());
+        if(!updatedUser.getUsername().equals(user.getUsername())) {
+            if (user.getUsername() == null || !validation.isValidName(user.getUsername())) {
+                throw new NotValidUserNameException("Not valid username!");
+            }
+            if (isUserExists(user.getUsername())) {
+                throw new UserAlreadyExistException("There is an account with that username: "
+                        + user.getUsername());
+            }
         }
 
-        User updatedUser = getById(user.getId());
         updatedUser.setUsername(user.getUsername());
         updatedUser.setRole(user.getRole());
-        System.out.println("updatedUser = " + updatedUser);
-//        repository.save(updatedNote);
+        repository.save(updatedUser);
     }
 }
